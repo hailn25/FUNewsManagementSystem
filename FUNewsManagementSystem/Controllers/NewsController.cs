@@ -49,6 +49,7 @@ namespace FUNewsManagementSystem.Controllers
         }
 
         // GET: NewsController/Create
+        [Authorize(Roles = "Staff")]
         public ActionResult Create()
         {
             return View();
@@ -57,6 +58,7 @@ namespace FUNewsManagementSystem.Controllers
         // POST: NewsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff")]
         public ActionResult Create(NewsArticle news)
         {
             if(!ModelState.IsValid)
@@ -69,28 +71,36 @@ namespace FUNewsManagementSystem.Controllers
         }
 
         // GET: NewsController/Edit/5
-        public ActionResult Edit(NewsArticle news)
+        [Authorize(Roles = "Staff")]
+        public ActionResult Edit(string id)
         {
-             _newsService.UpdateNewsArticle(news);
-            return View();
+            if (id == null) return NotFound();
+
+            var news = _newsService.GetNewsArticleByID(id);
+            if (news == null) return NotFound();
+
+            return View(news);
         }
 
         // POST: NewsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [Authorize(Roles = "Staff")]
+        public ActionResult Edit(string id, NewsArticle news)
         {
-            try
+            if (!id.Equals(news.NewsArticleId)) return NotFound();
+
+            if (ModelState.IsValid)
             {
+                 _newsService.UpdateNewsArticle(news);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(news);
         }
 
         // GET: NewsController/Delete/5
+        [Authorize(Roles = "Staff")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -99,6 +109,7 @@ namespace FUNewsManagementSystem.Controllers
         // POST: NewsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
