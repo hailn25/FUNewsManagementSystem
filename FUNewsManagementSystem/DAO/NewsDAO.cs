@@ -1,4 +1,5 @@
 ﻿using FUNewsManagementSystem.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FUNewsManagementSystem.DAO
 {
@@ -13,15 +14,21 @@ namespace FUNewsManagementSystem.DAO
 
         public IEnumerable<NewsArticle> GetAllNewsArticles()
         {
-            return _context.NewsArticles.ToList();
+            return _context.NewsArticles
+                .Include(n => n.Category)
+                .Include(n => n.CreatedBy)
+                .ToList();
         }
 
         public IEnumerable<NewsArticle> GetActiveNewsArticles()
         {
             return _context.NewsArticles
                 .Where(n => n.NewsStatus == true)
+                .Include(n => n.Category)
+                .Include(n => n.CreatedBy)
                 .ToList();
         }
+
 
         public NewsArticle GetNewsArticleByID(string id)
         {

@@ -35,12 +35,23 @@ namespace FUNewsManagementSystem.DAO
 
         public void DeleteCategory(short categoryID)
         {
-            var category = _context.Categories.Find(categoryID);
-            if (category != null)
+
             {
-                _context.Categories.Remove(category);
-                _context.SaveChanges();
+                var category = _context.Categories.Find(categoryID);
+                if (category != null)
+                {
+                    _context.Categories.Remove(category);
+                    _context.SaveChanges();
+                }
             }
         }
+        public bool IsCategoryUsed(short categoryId)
+        {
+            
+                return _context.NewsArticles.Any(n => n.CategoryId == categoryId);
+ 
+        }
+
+
     }
 }

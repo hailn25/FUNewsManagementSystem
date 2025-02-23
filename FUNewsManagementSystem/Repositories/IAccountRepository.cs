@@ -11,5 +11,6 @@ namespace FUNewsManagementSystem.Repositories
         void DeleteAccount(short id);
 
         Task<SystemAccount?> GetByEmailAndPassword(string email, string password);
+
     }
 }

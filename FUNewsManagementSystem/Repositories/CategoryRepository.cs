@@ -34,7 +34,19 @@ namespace FUNewsManagementSystem.Repositories
 
         public void DeleteCategory(short categoryID)
         {
-            _categoryDAO.DeleteCategory(categoryID);
+            if (CanDeleteCategory(categoryID))
+            {
+                _categoryDAO.DeleteCategory(categoryID);
+            }
+            else
+            {
+                throw new InvalidOperationException("Không thể xóa danh mục vì nó đã được sử dụng trong bài viết.");
+            }
         }
+        public bool CanDeleteCategory(short categoryId)
+        {
+            return !_categoryDAO.IsCategoryUsed(categoryId);
+        }
+
     }
 }

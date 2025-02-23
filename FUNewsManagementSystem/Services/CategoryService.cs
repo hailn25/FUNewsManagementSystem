@@ -34,7 +34,16 @@ namespace FUNewsManagementSystem.Services
 
         public void DeleteCategory(short categoryId)
         {
+            if (!CanDeleteCategory(categoryId))
+            {
+                throw new InvalidOperationException("Không thể xóa danh mục vì nó đã được sử dụng.");
+            }
+
             _categoryRepository.DeleteCategory(categoryId);
+        }
+        public bool CanDeleteCategory(short categoryId)
+        {
+            return _categoryRepository.CanDeleteCategory(categoryId);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using FUNewsManagementSystem.Models;
 using FUNewsManagementSystem.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FUNewsManagementSystem.Controllers
 {
+    [Authorize(Roles = "Staff")]
     public class CategoryController : Controller
     {
         private readonly CategoryService _categoryService;
@@ -16,6 +18,7 @@ namespace FUNewsManagementSystem.Controllers
         // GET: Category
         public ActionResult Index()
         {
+
             var categories = _categoryService.GetAllCategories();
             return View(categories);
         }
@@ -67,9 +70,23 @@ namespace FUNewsManagementSystem.Controllers
         // GET: Category/Delete/5
         public ActionResult Delete(short id)
         {
-            var category = _categoryService.GetCategoryById(id);
-            if(category == null) return NotFound();
-            return View(category);
+            try
+            {
+                if (!_categoryService.CanDeleteCategory(id))
+                {
+                    TempData["ErrorMessage"] = "Không thể xóa danh mục vì đã có bài viết sử dụng.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                _categoryService.DeleteCategory(id);
+                TempData["SuccessMessage"] = "Danh mục đã được xóa thành công.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Lỗi khi xóa danh mục: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Category/Delete/5

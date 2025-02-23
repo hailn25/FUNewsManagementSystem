@@ -1,5 +1,6 @@
 ﻿using FUNewsManagementSystem.DAO;
 using FUNewsManagementSystem.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FUNewsManagementSystem.Repositories
 {
@@ -38,5 +39,6 @@ namespace FUNewsManagementSystem.Repositories
         {
             _newsDAO.DeleteNewsArticle(id);
         }
+
     }
 }

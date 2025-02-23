@@ -9,5 +9,6 @@ namespace FUNewsManagementSystem.Repositories
         void AddCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(short categoryID);
+        bool CanDeleteCategory(short categoryID);
     }
 }

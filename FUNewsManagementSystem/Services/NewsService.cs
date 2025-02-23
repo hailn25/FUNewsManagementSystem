@@ -42,5 +42,6 @@ namespace FUNewsManagementSystem.Services
             _newsRepository.DeleteNewsArticle(id);
         }
 
+
     }
 }

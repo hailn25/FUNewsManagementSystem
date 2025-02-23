@@ -9,5 +9,6 @@ namespace FUNewsManagementSystem.DAO
         void AddCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(short categoryId);
+        bool IsCategoryUsed(short categoryId);
     }
 }
