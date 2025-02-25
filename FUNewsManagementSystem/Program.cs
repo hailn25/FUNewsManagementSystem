@@ -26,6 +26,7 @@ namespace FUNewsManagementSystem
 			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 			builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 			builder.Services.AddScoped<AccountService>();
+			builder.Services.AddScoped<EmailService>();
 			builder.Services.AddHttpContextAccessor();
 			builder.Services.AddControllersWithViews();
 

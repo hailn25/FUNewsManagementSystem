@@ -10,6 +10,7 @@ namespace FUNewsManagementSystem.DAO
         void AddNewsArticle(NewsArticle newsArticle);
         void UpdatingNewsArticle(NewsArticle newsArticle);
         void DeleteNewsArticle(string id);
+        NewsArticle GetLastNewsArticle();
 
     }
 }

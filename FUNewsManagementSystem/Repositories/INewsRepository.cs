@@ -11,5 +11,6 @@ namespace FUNewsManagementSystem.Repositories
         void AddNewsArticle(NewsArticle article);
         void UpdateNewsArticle(NewsArticle article);
         void DeleteNewsArticle(string id);
+        NewsArticle GetLastNewsArticle();
     }
 }

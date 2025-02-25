@@ -40,5 +40,10 @@ namespace FUNewsManagementSystem.Repositories
             _newsDAO.DeleteNewsArticle(id);
         }
 
+        public NewsArticle GetLastNewsArticle()
+        {
+            return  _newsDAO.GetLastNewsArticle();
+        }
+
     }
 }

@@ -10,10 +10,12 @@ namespace FUNewsManagementSystem.Controllers
     public class NewsController : Controller
     {
         private readonly NewsService _newsService;
+        private readonly EmailService _emailService;
         // GET: NewsController
-        public NewsController(NewsService newsService) // Inject Service vào Controller
+        public NewsController(NewsService newsService, EmailService emailService) // Inject Service vào Controller
         {
             _newsService = newsService ?? throw new ArgumentNullException(nameof(newsService));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
 
@@ -35,7 +37,16 @@ namespace FUNewsManagementSystem.Controllers
 
             return View(news);
         }
+        public ActionResult Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return View("Index", _newsService.GetAllNewsArticle());
+            }
 
+            var result = _newsService.SearchNews(query);
+            return View("Index", result); // Hiển thị kết quả trong trang Index
+        }
 
 
 
@@ -65,6 +76,19 @@ namespace FUNewsManagementSystem.Controllers
                 return View(news);
 
             _newsService.AddNewsArticle(news);
+            string adminEmail = "hailnhe173577@fpt.edu.vn"; // Thay bằng email thực tế của Admin
+            string subject = "📰 New Article Published: " + news.NewsTitle;
+            string body = $@"
+            <h3>A new article has been published</h3>
+            <p><b>Title:</b> {news.NewsTitle}</p>
+            <p><b>Author:</b> {news.CreatedBy?.AccountName}</p>
+            <p><a href='https://yourwebsite.com/news/{news.NewsArticleId}'>Click here to read</a></p>
+            <br/>
+            <p>Thank you!</p>
+            ";
+
+            // Gửi email (không chặn luồng chính)
+            Task.Run(() => _emailService.SendEmailAsync(adminEmail, subject, body));
             return RedirectToAction(nameof(Index));
 
             
@@ -88,6 +112,7 @@ namespace FUNewsManagementSystem.Controllers
         [Authorize(Roles = "Staff")]
         public ActionResult Edit(string id, NewsArticle news)
         {
+
             if (!id.Equals(news.NewsArticleId)) return NotFound();
 
             if (ModelState.IsValid)
@@ -101,8 +126,11 @@ namespace FUNewsManagementSystem.Controllers
 
         // GET: NewsController/Delete/5
         [Authorize(Roles = "Staff")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
+            if(id == null) return NotFound();
+            var news = _newsService.GetNewsArticleByID(id);
+            if (news == null) return NotFound();
             return View();
         }
 
@@ -110,16 +138,17 @@ namespace FUNewsManagementSystem.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Staff")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string id, NewsArticle news)
         {
-            try
+            if (!id.Equals(news.NewsArticleId)) return NotFound();
+
+            if (ModelState.IsValid)
             {
+                _newsService.DeleteNewsArticle(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(news);
         }
     }
 }

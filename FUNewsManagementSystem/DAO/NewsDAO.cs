@@ -1,4 +1,5 @@
 ﻿using FUNewsManagementSystem.Models;
+using FUNewsManagementSystem.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FUNewsManagementSystem.DAO
@@ -6,6 +7,7 @@ namespace FUNewsManagementSystem.DAO
     public class NewsDAO : INewsDAO
     {
         private readonly FunewsManagementContext _context;
+        private readonly EmailService _emailService;
 
         public NewsDAO(FunewsManagementContext context)
         {
@@ -39,6 +41,15 @@ namespace FUNewsManagementSystem.DAO
         {
             _context.NewsArticles.Add(newsArticle);
             _context.SaveChanges();
+           
+        }
+        public NewsArticle GetLastNewsArticle()
+        {
+            var newsArticles = _context.NewsArticles.ToList(); 
+
+            return newsArticles
+                .OrderByDescending(n => int.TryParse(n.NewsArticleId, out int id) ? id : 0)
+                .FirstOrDefault();
         }
 
         public void UpdatingNewsArticle(NewsArticle newsArticle)
@@ -51,15 +62,15 @@ namespace FUNewsManagementSystem.DAO
 
         public void DeleteNewsArticle(string id)
         {
-            //var news = _context.NewsArticles.Find(id);
-            //if (news != null)
-            //{
-            //    _context.NewsArticles.Remove(news);
-            //    _context.SaveChanges();
-            //}
+            var news = _context.NewsArticles.Find(id);
+            if (news != null)
+            {
+                _context.NewsArticles.Remove(news);
+                _context.SaveChanges();
+            }
         }
 
 
-       
+
     }
 }
