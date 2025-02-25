@@ -69,8 +69,15 @@ namespace FUNewsManagementSystem.DAO
                 _context.SaveChanges();
             }
         }
+		public async Task<List<NewsArticle>> GetReportByDateRange(DateTime startDate, DateTime endDate)
+		{
+			return await _context.NewsArticles
+				.Where(n => n.CreatedDate >= startDate && n.CreatedDate <= endDate)
+				.OrderByDescending(n => n.CreatedDate)
+				.ToListAsync();
+		}
 
 
 
-    }
+	}
 }

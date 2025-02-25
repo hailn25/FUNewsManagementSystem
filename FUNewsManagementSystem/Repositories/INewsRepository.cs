@@ -12,5 +12,7 @@ namespace FUNewsManagementSystem.Repositories
         void UpdateNewsArticle(NewsArticle article);
         void DeleteNewsArticle(string id);
         NewsArticle GetLastNewsArticle();
-    }
+        Task<List<NewsArticle>> GetReportByDateRange(DateTime startDate, DateTime endDate);
+
+	}
 }

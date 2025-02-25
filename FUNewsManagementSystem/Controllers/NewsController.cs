@@ -150,5 +150,18 @@ namespace FUNewsManagementSystem.Controllers
 
             return View(news);
         }
-    }
+		[Authorize(Roles = "Admin")]
+		public IActionResult Report()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Report(DateTime startDate, DateTime endDate)
+		{
+			var reportData = await _newsService.GetReportByDateRange(startDate, endDate);
+			return View(reportData);
+		}
+	}
 }

@@ -153,14 +153,16 @@ namespace FUNewsManagementSystem.Controllers
         // POST: AccountController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(short id, SystemAccount account)
         {
             try
             {
+                _accountService.DeleteAccount(id); // Gọi service để xóa tài khoản
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                ModelState.AddModelError("", "Lỗi khi xóa tài khoản: " + ex.Message);
                 return View();
             }
         }

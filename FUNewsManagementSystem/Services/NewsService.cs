@@ -1,5 +1,6 @@
 ﻿using FUNewsManagementSystem.Models;
 using FUNewsManagementSystem.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FUNewsManagementSystem.Services
 {
@@ -66,7 +67,11 @@ namespace FUNewsManagementSystem.Services
                          || n.NewsContent.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
+		public async Task<List<NewsArticle>> GetReportByDateRange(DateTime startDate, DateTime endDate)
+		{
+			return await _newsRepository.GetReportByDateRange(startDate, endDate);
+		}
 
 
-    }
+	}
 }

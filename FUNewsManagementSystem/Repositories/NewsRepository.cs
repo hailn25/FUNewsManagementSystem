@@ -44,6 +44,10 @@ namespace FUNewsManagementSystem.Repositories
         {
             return  _newsDAO.GetLastNewsArticle();
         }
+		public async Task<List<NewsArticle>> GetReportByDateRange(DateTime startDate, DateTime endDate)
+		{
+			return await _newsDAO.GetReportByDateRange(startDate, endDate);
+		}
 
-    }
+	}
 }
