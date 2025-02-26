@@ -10,5 +10,6 @@ namespace FUNewsManagementSystem.DAO
         void UpdateAccount(SystemAccount account);
         void DeleteAccount(short id);
         Task<SystemAccount?> GetByEmailAndPassword(string email, string password);
+       
     }
 }

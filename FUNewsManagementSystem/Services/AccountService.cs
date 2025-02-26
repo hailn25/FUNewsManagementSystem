@@ -1,5 +1,6 @@
 ﻿using FUNewsManagementSystem.Models;
 using FUNewsManagementSystem.Repositories;
+using System.Security.Claims;
 
 namespace FUNewsManagementSystem.Services
 {
@@ -8,12 +9,14 @@ namespace FUNewsManagementSystem.Services
        
             private readonly IAccountRepository _accountRepository;
             private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public AccountService(IAccountRepository accountRepository, IConfiguration configuration)
+        public AccountService(IAccountRepository accountRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
             {
                 _accountRepository = accountRepository;
                 _configuration = configuration;
-            }
+            _httpContextAccessor = httpContextAccessor;
+        }
 
             public async Task<SystemAccount?> AuthenticateUser(string email, string password)
             {
@@ -66,6 +69,17 @@ namespace FUNewsManagementSystem.Services
         {
             _accountRepository.DeleteAccount(id);
         }
+        public void UpdateUserAccount(SystemAccount account)
+        {
+            var existingAccount = _accountRepository.GetAccountById(account.AccountId);
+            if (existingAccount == null) throw new Exception("Account not found.");
+
+            existingAccount.AccountName = account.AccountName;
+            existingAccount.AccountPassword = account.AccountPassword; // Có thể mã hóa mật khẩu nếu cần
+
+            _accountRepository.UpdateAccount(existingAccount);
+        }
+
     }
-    }
+}
 

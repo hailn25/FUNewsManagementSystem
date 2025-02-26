@@ -48,5 +48,6 @@ namespace FUNewsManagementSystem.Repositories
             return !_categoryDAO.IsCategoryUsed(categoryId);
         }
 
+
     }
 }

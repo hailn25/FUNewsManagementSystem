@@ -49,5 +49,6 @@ namespace FUNewsManagementSystem.Repositories
 			return await _newsDAO.GetReportByDateRange(startDate, endDate);
 		}
 
+
 	}
 }

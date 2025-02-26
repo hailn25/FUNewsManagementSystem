@@ -166,5 +166,41 @@ namespace FUNewsManagementSystem.Controllers
                 return View();
             }
         }
+
+        public ActionResult EditProfile()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var account = _accountService.GetAccountById((short)userId);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return View(account);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProfile(SystemAccount account)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null || userId != account.AccountId)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (!ModelState.IsValid) return View(account);
+
+            _accountService.UpdateAccount(account);
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
     }
 }
